@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState } from 'react';
-import { TrendingUp, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { TrendingUp, Mail, Lock, Eye, EyeOff,  } from 'lucide-react';
+import Link from 'next/link';
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -26,9 +27,9 @@ export default function LoginPage() {
               <TrendingUp className="w-8 h-8 text-blue-500" />
               <span className="text-2xl font-semibold text-gray-800">AlphaWave</span>
             </div>
-            <a href="/" className="text-gray-600 hover:text-blue-500 transition">
+            <Link href="/" className="text-gray-600 hover:text-blue-500 transition">
               Back to Home
-            </a>
+            </Link>
           </div>
         </div>
       </nav>
@@ -149,7 +150,7 @@ export default function LoginPage() {
             {/* Sign Up Link */}
             <div className="mt-6 text-center">
               <p className="text-sm text-gray-600">
-                Don't have an account?{' '}
+                Don&apos;t have an account?{' '}
                 <button className="text-blue-500 hover:text-blue-600 font-medium transition">
                   Sign up for free
                 </button>
