@@ -3,13 +3,22 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { TrendingUp, TrendingDown, DollarSign, PieChart, ArrowUpRight, ArrowDownRight, Plus, Search, Sparkles } from 'lucide-react';
 import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function InvestingPage() {
   const [portfolioValue, setPortfolioValue] = useState(125340.50);
   const [searchStock, setSearchStock] = useState('');
   const [hoveredHolding, setHoveredHolding] = useState(null);
   const [hoveredWatchlist, setHoveredWatchlist] = useState(null);
-
+  const router=useRouter();
+  const params=useSearchParams();
+  useEffect(() => {
+    const token=params.get("token");
+    if(token){
+      localStorage.setItem("authToken",token)
+    }
+  }, [])
+  
   // Animate portfolio value
   useEffect(() => {
     const interval = setInterval(() => {
