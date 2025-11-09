@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { TrendingUp, TrendingDown, Search, Filter, Star, Plus, ArrowUpRight, ArrowDownRight, BarChart3, Sparkles , User , LogOut} from 'lucide-react';
+import { TrendingUp, TrendingDown, Search, Filter, Star, Plus, ArrowUpRight, ArrowDownRight, BarChart3, Sparkles, User, LogOut } from 'lucide-react';
 import Link from 'next/link';
 
 export default function StocksPage() {
@@ -27,8 +27,8 @@ export default function StocksPage() {
   ];
 
   const filteredStocks = stocks.filter(stock => {
-    const matchesSearch = stock.symbol.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                         stock.name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch = stock.symbol.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      stock.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'All' || stock.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
@@ -38,6 +38,23 @@ export default function StocksPage() {
     { label: 'Dow Jones', value: '37,440.34', change: 0.5, color: 'from-green-500 to-green-600' },
     { label: 'NASDAQ', value: '15,043.97', change: 1.2, color: 'from-purple-500 to-purple-600' },
   ];
+
+    const handleSearch = async () => {
+    if (searchQuery.trim()) {
+      try {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/search?q=${encodeURIComponent(searchQuery.trim())}`);
+        const data = await res.json();
+        if (data.results) {
+          setSearchResults(data.results);
+        } else {
+          setSearchResults([]);
+        }
+      } catch (err) {
+        console.error("Search error:", err);
+        setSearchResults([]);
+      }
+    }
+  };
 
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 via-purple-50 to-pink-50 relative overflow-hidden">
@@ -53,22 +70,22 @@ export default function StocksPage() {
         <div className="max-w-7xl mx-auto px-4 py-2">
           <div className="flex items-center justify-between">
             <Link href="/" className="flex items-center space-x-2 hover:opacity-90">
-                            <TrendingUp className="w-8 h-8 text-blue-500" />
-                            <span className="text-2xl font-semibold text-gray-800">AlphaWave</span>
-                        </Link>
+              <TrendingUp className="w-8 h-8 text-blue-500" />
+              <span className="text-2xl font-semibold text-gray-800">AlphaWave</span>
+            </Link>
             <div className="flex items-center space-x-4">
               <Link href="/stocks"><button className="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:scale-110 text-sm">Stocks</button></Link>
               <Link href="/invest"><button className="text-blue-500 font-medium hover:scale-110 transition-transform duration-300 text-sm">Portfolio</button></Link>
               <Link href="/learn"><button className="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:scale-110 text-sm">Learn</button></Link>
               <Link href="/compete"><button className="text-gray-600 hover:text-blue-500 transition-all duration-300 hover:scale-110 text-sm">Compete</button></Link>
-              <button 
+              <button
                 onClick={() => {
                   localStorage.removeItem('authToken');
                   window.location.href = '/';
                 }}
                 className="text-red-600 hover:text-red-700 transition-all duration-300 hover:scale-110 text-sm font-medium"
               >
-                <LogOut/>
+                <LogOut />
               </button>
               <Link href="/profile"><div className="w-8 h-8 bg-linear-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-medium transform hover:scale-110 transition-all duration-300 cursor-pointer text-xs">
                 <User />
@@ -85,7 +102,7 @@ export default function StocksPage() {
             Market Overview
             <Sparkles className="ml-2 w-5 h-5 text-yellow-500 animate-pulse" />
           </h1>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {marketStats.map((stat, index) => (
               <div key={index} className={`bg-linear-to-br ${stat.color} rounded-xl p-4 text-white shadow-lg transform hover:scale-105 transition-all duration-500 animate-fade-in`} style={{ animationDelay: `${index * 100}ms` }}>
@@ -113,17 +130,16 @@ export default function StocksPage() {
                 placeholder="Search stocks by symbol or name..."
               />
             </div>
-            
+
             <div className="flex items-center space-x-2 overflow-x-auto">
               {categories.map((category) => (
                 <button
                   key={category}
                   onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 whitespace-nowrap ${
-                    selectedCategory === category
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 whitespace-nowrap ${selectedCategory === category
                       ? 'bg-linear-to-r from-blue-500 to-purple-500 text-white shadow-lg'
                       : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
-                  }`}
+                    }`}
                 >
                   {category}
                 </button>
@@ -185,27 +201,46 @@ export default function StocksPage() {
                     Buy
                   </button>
                   <Link href="/performance" className="flex-1">
-  <button className="w-full border-2 border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-50 transition-all duration-300 text-sm font-medium relative overflow-hidden group">
-    <span className="relative z-10 flex items-center justify-center transition-opacity duration-300 group-hover:opacity-0">
-      Details
-      <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-      </svg>
-    </span>
-    <div className="absolute inset-0 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
-    <span className="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
-      View More
-      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-      </svg>
-    </span>
-  </button>
-</Link>
+                    <button className="w-full border-2 border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-50 transition-all duration-300 text-sm font-medium relative overflow-hidden group">
+                      <span className="relative z-10 flex items-center justify-center transition-opacity duration-300 group-hover:opacity-0">
+                        Details
+                        <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                      <div className="absolute inset-0 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
+                      <span className="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+                        View More
+                        <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </span>
+                    </button>
+                  </Link>
                 </div>
               </div>
             </div>
           ))}
         </div>
+
+        {searchResults.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {searchResults.map((stock, index) => (
+              <div key={index} className="bg-white rounded-xl border p-4 shadow hover:shadow-lg transition cursor-pointer">
+                <h3 className="font-semibold text-lg">{stock.displaySymbol}</h3>
+                <p className="text-gray-600 text-sm mb-2">{stock.description}</p>
+                <p className="text-xs text-gray-500">
+                  Type: {stock.type} <br />
+                  Exchange: {stock.exchange || 'N/A'}
+                </p>
+                <button className="mt-3 w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition">
+                  View Details
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
 
         {filteredStocks.length === 0 && (
           <div className="text-center py-12">
@@ -213,6 +248,8 @@ export default function StocksPage() {
           </div>
         )}
       </div>
+
+      
 
       <style>{`
         @keyframes float {
