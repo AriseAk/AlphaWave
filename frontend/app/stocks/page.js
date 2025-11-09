@@ -184,9 +184,23 @@ export default function StocksPage() {
                     <Plus className="w-4 h-4 mr-1" />
                     Buy
                   </button>
-                  <button className="flex-1 border-2 border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-50 transition-all duration-300 text-sm font-medium">
-                    Details
-                  </button>
+                  <Link href="/performance" className="flex-1">
+  <button className="w-full border-2 border-blue-500 text-blue-500 py-2 rounded-lg hover:bg-blue-50 transition-all duration-300 text-sm font-medium relative overflow-hidden group">
+    <span className="relative z-10 flex items-center justify-center transition-opacity duration-300 group-hover:opacity-0">
+      Details
+      <svg className="w-4 h-4 ml-1 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </span>
+    <div className="absolute inset-0 bg-blue-500 transform scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300" />
+    <span className="absolute inset-0 flex items-center justify-center text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
+      View More
+      <svg className="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+      </svg>
+    </span>
+  </button>
+</Link>
                 </div>
               </div>
             </div>
